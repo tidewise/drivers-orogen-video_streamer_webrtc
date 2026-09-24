@@ -519,12 +519,21 @@ void soup_websocket_closed_cb(SoupWebsocketConnection* connection, gpointer user
     g_print("Closed websocket connection %p\n", (gpointer)connection);
 }
 
+#if SOUP_MAJOR_VERSION == 3
 void soup_websocket_handler(G_GNUC_UNUSED SoupServer* server,
     SoupServerMessage* msg,
     G_GNUC_UNUSED const char* path,
     SoupWebsocketConnection* connection,
     gpointer _task)
 {
+#else
+void soup_websocket_handler(G_GNUC_UNUSED SoupServer* server,
+    SoupWebsocketConnection* connection,
+    G_GNUC_UNUSED const char* path,
+    G_GNUC_UNUSED SoupClientContext* client_context,
+    gpointer _task)
+{
+#endif
     auto task = (StreamerTask*)_task;
     if (task->serverIsPaused()) {
         return;
